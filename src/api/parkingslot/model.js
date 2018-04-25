@@ -8,10 +8,16 @@ const parkingslotSchema = new Schema({
     type: String
   },
   occupied: {
-    type: String
+    type: Boolean
+  },
+  waiting: {
+    type: Boolean
+  },
+  invaded: {
+    type: Boolean
   },
   preferential: {
-    type: String
+    type: Boolean
   }
 }, {
   timestamps: true,
@@ -29,6 +35,8 @@ parkingslotSchema.methods = {
       number: this.number,
       section: this.section,
       occupied: this.occupied,
+      waiting: this.waiting,
+      invaded: this.invaded,
       preferential: this.preferential,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt
