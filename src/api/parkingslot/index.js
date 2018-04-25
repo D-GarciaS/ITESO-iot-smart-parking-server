@@ -1,12 +1,12 @@
 import { Router } from 'express'
 import { middleware as query } from 'querymen'
 import { middleware as body } from 'bodymen'
-import { create, index, show, update, destroy } from './controller'
+import { create, index, show, update, destroy, indexSection, updateState } from './controller'
 import { schema } from './model'
 export Parkingslot, { schema } from './model'
 
 const router = new Router()
-const { number, section, occupied, preferential } = schema.tree
+const { number, section, occupied, waiting, invaded, preferential } = schema.tree
 
 /**
  * @api {post} /parkingslots Create parkingslot
@@ -21,7 +21,7 @@ const { number, section, occupied, preferential } = schema.tree
  * @apiError 404 Parkingslot not found.
  */
 router.post('/',
-  body({ number, section, occupied, preferential }),
+  body({ number, section, occupied, waiting, invaded, preferential }),
   create)
 
 /**
@@ -60,7 +60,7 @@ router.get('/:id',
  * @apiError 404 Parkingslot not found.
  */
 router.put('/:id',
-  body({ number, section, occupied, preferential }),
+  body({ number, section, occupied, waiting, invaded, preferential }),
   update)
 
 /**
@@ -72,5 +72,18 @@ router.put('/:id',
  */
 router.delete('/:id',
   destroy)
+
+/**
+ * TODO: Comment
+ */
+router.get('/section/:sec',
+  indexSection)
+
+/**
+ * TODO: Comment
+ */
+router.post('/state/:id',
+  body({ number, section, occupied, waiting, invaded, preferential }),
+  updateState)
 
 export default router
