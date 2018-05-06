@@ -2,14 +2,34 @@ import { success, notFound } from '../../services/response/'
 import { Parkingslot } from '.'
 
 const checkInvasion = (entity, current) => {
-  var isInvasion = entity.occupied ? entity.occupied === current : false
+  // var isInvasion = entity.occupied ? entity.occupied !== current : false
+  var isInvasion = !entity.occupied && !entity.waiting && current
+  if (!isInvasion) return entity
   var body = {
-    occupied: current,
-    invaded: isInvasion
+    invaded: isInvasion,
+    occupied: true
   }
-  console.log(body)
-  console.log(Object.assign(entity, body))
-  return Object.assign(entity, body).save()
+  return Object.assign(entity, body)
+}
+
+const checkArrival = (entity, current) => {
+  var isArrival = entity.waiting && current
+  if (!isArrival) return entity
+  var body = {
+    waiting: false,
+    occupied: true
+  }
+  return Object.assign(entity, body)
+}
+
+const checkDeparture = (entity, current) => {
+  var isArrival = entity.occupied && !current
+  if (!isArrival) return entity
+  var body = {
+    invaded: false,
+    occupied: false
+  }
+  return Object.assign(entity, body)
 }
 
 export const create = ({ bodymen: { body } }, res, next) =>
@@ -49,8 +69,15 @@ export const destroy = ({ params }, res, next) =>
 export const updateState = ({ bodymen: { body }, params }, res, next) =>
   Parkingslot.findById(params.id)
     .then(notFound(res))
-    .then((res) => checkInvasion(res, body.occupied))
-    .then((parkingslot) => parkingslot ? parkingslot.view(true) : null)
+    .then(res => {
+      console.log('received', body)
+      return res
+    })
+    .then(res => checkInvasion(res, body.occupied))
+    .then(res => checkArrival(res, body.occupied))
+    .then(res => checkDeparture(res, body.occupied))
+    .then(res => res.save())
+    .then(parkingslot => (parkingslot ? parkingslot.view(true) : null))
     .then(success(res))
     .catch(next)
 

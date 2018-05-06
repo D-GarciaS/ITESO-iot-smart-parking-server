@@ -8,16 +8,20 @@ const parkingslotSchema = new Schema({
     type: String
   },
   occupied: {
-    type: Boolean
+    type: Boolean,
+    default: false
   },
   waiting: {
-    type: Boolean
+    type: Boolean,
+    default: false
   },
   invaded: {
-    type: Boolean
+    type: Boolean,
+    default: false
   },
   preferential: {
-    type: Boolean
+    type: Boolean,
+    default: true
   }
 }, {
   timestamps: true,

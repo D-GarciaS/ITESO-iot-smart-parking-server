@@ -2,7 +2,8 @@ import { Router } from 'express'
 import { middleware as query } from 'querymen'
 import { middleware as body } from 'bodymen'
 import { create, index, show, update, destroy, indexSection, updateState } from './controller'
-import { schema } from './model'
+import model, { schema } from './model'
+import { Model } from 'mongoose';
 export Parkingslot, { schema } from './model'
 
 const router = new Router()
@@ -32,7 +33,7 @@ router.post('/',
  * @apiSuccess {Object[]} parkingslots List of parkingslots.
  * @apiError {Object} 400 Some parameters may contain invalid values.
  */
-router.get('/',
+router.get('/get',
   query(),
   index)
 
@@ -44,7 +45,7 @@ router.get('/',
  * @apiError {Object} 400 Some parameters may contain invalid values.
  * @apiError 404 Parkingslot not found.
  */
-router.get('/:id',
+router.get('/get/:id',
   show)
 
 /**
@@ -85,5 +86,14 @@ router.get('/section/:sec',
 router.post('/state/:id',
   body({ number, section, occupied, waiting, invaded, preferential }),
   updateState)
+
+/**
+ * TODO: Comment
+ */
+// router.get('/free')
+
+router.get('/remove/', () =>
+  model.remove({}, () => {})
+)
 
 export default router

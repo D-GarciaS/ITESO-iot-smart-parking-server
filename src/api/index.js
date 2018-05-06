@@ -2,6 +2,8 @@ import { Router } from 'express'
 import user from './user'
 import auth from './auth'
 import parkingslot from './parkingslot'
+import credentials from './credentials'
+import slotrequest from './slotrequest'
 
 const router = new Router()
 
@@ -31,5 +33,7 @@ const router = new Router()
 router.use('/users', user)
 router.use('/auth', auth)
 router.use('/parkingslots', parkingslot)
+router.use('/credentials', credentials)
+router.use('/slotrequest', slotrequest)
 
 export default router
