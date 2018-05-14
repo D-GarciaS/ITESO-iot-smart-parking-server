@@ -4,10 +4,13 @@ import { notFound, success } from '../../services/response/'
 import { Slotrequest } from '.'
 
 import Parkingslot, { schema } from '../parkingslot/model'
+import { findCredentials, credentialsFound } from '../../services/credentialsvalidator'
 
 export const create = ({ bodymen: { body } }, res, next) =>
   Slotrequest.create(body)
     .then(slotrequest => slotrequest.view(true))
+    .then(findCredentials(res))
+    .then(credentialsFound(res))
     .then(() =>
       Parkingslot.findOne({
         occupied: false,
